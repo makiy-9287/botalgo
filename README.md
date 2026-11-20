@@ -1,8 +1,17 @@
 # Orderflow Terminal
-Run on VPS: `./run.sh` then open `http://VPS_IP:8000` (open the port in your firewall; set PORT=xxxx to change).
-Keep it private: the Telegram token is stored server-side in config.json, so restrict the port to your own IP.
-- Chart: candlesticks (Binance USDT-M futures) + Footprint toggle + Signal toggle.
-- Footprint/absorption data is collected live from the aggTrade WebSocket, so it fills in from the moment the server (or a new pair) starts.
-- Modes: scalping (5m trigger / 15m bias / 1h levels), day (15m/1h/4h), swing (1h/4h/1d). Signals only Mon-Thu UTC.
-- Signal = liquidity sweep (mandatory) + >=4 more of: delta divergence, delta shift, absorption, HTF bias+delta, VWAP location, level confluence (>=5 of 7, incl. delta divergence or absorption). SL beyond sweep extreme, TP1 1.5R, TP2 3R.
-- After TP/SL the pair resets (short cooldown) and keeps scanning. Watchlist max 10 -> one combined aggTrade stream (far under Binance's 1024-stream / 10 msg/s limits).
+Run: `./run.sh` -> open `http://VPS_IP:8000` (`sudo ufw allow 8000`; change with `PORT=9000 ./run.sh`).
+Always-on: copy to /opt/orderflow-terminal, `sudo cp deploy/orderflow.service /etc/systemd/system/ && sudo systemctl enable --now orderflow`.
+Lock the port to your own IP: the Telegram token is stored in data/config.json and the site has no login.
+
+## Layout
+server/config.py  settings, modes, atomic JSON persistence      server/binance.py  REST client (retry, cache, de-dupe)
+server/feed.py    one Binance aggTrade WebSocket, live (un)subscribe  server/footprint.py  per-level bid/ask store
+server/engine.py  orderflow signal engine                       server/tracker.py  signal lifecycle TP1/TP2/SL, persisted
+server/telegram.py alerts + /status /watchlist /mode /help      server/hub.py      browser WebSocket (ticks, footprint, signals)
+server/main.py    FastAPI routes                                static/            UI (vendored chart lib, no CDN)
+
+## Notes
+- Telegram uses the plain Bot HTTP API through httpx, so no extra package is needed. In Telegram open your bot and press Start before testing. Use your numeric chat ID (groups: negative ID).
+- Header dot shows feed health. If it says blocked/451, Binance blocks the VPS region: use a non-US VPS or set BINANCE_REST / BINANCE_WS.
+- Footprint builds from live trades after the server starts (no history backfill). Absorption uses footprint data once a bar is fully covered, otherwise volume+wick.
+- Trading days = Mon-Thu UTC. One Binance WebSocket, subscriptions changed live (far under 1024 streams / 10 msgs per s).
