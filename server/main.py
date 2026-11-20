@@ -8,6 +8,7 @@ from pydantic import BaseModel
 from . import binance
 from .config import BASE, cfg, MODES, MAX_WL
 from .engine import Engine
+from . import history
 from .feed import Feed
 from .footprint import FootprintStore
 from .hub import Hub
@@ -18,6 +19,12 @@ tg, fp = Telegram(), FootprintStore()
 tracker = Tracker(tg.notify, lambda: asyncio.create_task(hub.push_signals()))
 def on_trade(s, p, q, sell, ms): fp.add(s, p, q, sell, ms); tracker.on_price(s, p)
 feed = Feed(on_trade); hub = Hub(feed, fp, tracker); engine = Engine(feed, fp, tracker, tg.notify, hub.symbols)
+hub.engine = engine
+
+async def _bf(sym):
+    if await history.backfill(fp, feed, sym): await hub.push_fpsnap(sym)
+hub.on_view = lambda s: asyncio.create_task(_bf(s))
+feed.on_first = lambda s: s in hub.symbols() and asyncio.create_task(_bf(s))
 
 def command(c, a):
     if c == "/status":
@@ -29,7 +36,7 @@ def command(c, a):
 
 @asynccontextmanager
 async def life(app):
-    ts = [asyncio.create_task(f) for f in (feed.run(), hub.run(), engine.run(), tg.poll(command))]
+    ts = [asyncio.create_task(f) for f in (feed.run(), feed.rest_loop(lambda: hub.symbols() | set(tracker.active)), hub.run(), hub.mon(), engine.run(), tg.poll(command))]
     yield
     for t in ts: t.cancel()
 

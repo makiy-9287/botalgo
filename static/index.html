@@ -6,7 +6,7 @@
 <script type="module" src="/static/js/app.js"></script></head>
 <body><div id="app">
 <header>
- <div class="g1"><input id="sym" list="syms" autocapitalize="characters" autocomplete="off" spellcheck="false" aria-label="Symbol">
+ <div class="g1"><input id="sym" autocapitalize="characters" autocomplete="off" spellcheck="false" aria-label="Symbol">
   <b id="px">–</b><span id="feed" class="feed"><i></i><em>connecting</em></span></div>
  <div class="g3"><select id="mode" aria-label="Mode"><option value="scalping">Scalping</option><option value="day">Day</option><option value="swing">Swing</option></select>
   <button id="bfp" aria-pressed="false">Footprint</button><button id="bsig" aria-pressed="false">Signal</button>
@@ -16,12 +16,12 @@
 <main id="wrap"><div id="chart"></div><canvas id="fp"></canvas><div id="card"></div><div id="load" class="show"><div class="spin"></div></div></main>
 </div>
 <aside id="drawer" aria-label="Watchlist"><div class="hd"><span>Watchlist <span id="cnt" class="mu"></span></span><button id="xwl" aria-label="Close">✕</button></div>
- <div id="add"><input id="ns" list="syms" placeholder="Add pair e.g. SOL" autocapitalize="characters" autocomplete="off" spellcheck="false"><button id="badd" class="on">Add</button></div>
+ <div id="add"><input id="ns" placeholder="Add pair e.g. SOL" autocapitalize="characters" autocomplete="off" spellcheck="false"><button id="badd" class="on">Add</button></div>
  <p id="wlerr" class="err"></p><div id="list"></div></aside>
 <div class="scrim" id="scrim"><div class="modal"><h3>Settings</h3>
  <label for="tt">Telegram bot token</label><input id="tt" placeholder="123456:ABC-DEF..." autocomplete="off" spellcheck="false">
  <label for="tc">Telegram chat ID</label><input id="tc" placeholder="e.g. 123456789" autocomplete="off" inputmode="numeric">
  <p id="tgmsg" class="mu"></p>
  <div class="row"><button id="btest">Send test</button><button id="bsave" class="on">Save</button><button id="bclose">Close</button></div></div></div>
-<datalist id="syms"></datalist><div id="toast" role="status"></div>
+<div id="toast" role="status"></div>
 </body></html>

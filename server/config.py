@@ -1,4 +1,4 @@
-import json, os, datetime as dt
+import json, os
 from pathlib import Path
 BASE = Path(__file__).resolve().parent.parent
 DATA = BASE / "data"; DATA.mkdir(exist_ok=True)
@@ -17,4 +17,3 @@ class Store(dict):
         t = self.path.with_suffix(".tmp"); t.write_text(json.dumps(self)); os.replace(t, self.path)
 
 cfg = Store("config.json", {"watchlist": ["BTCUSDT", "ETHUSDT"], "mode": "day", "tg_token": "", "tg_chat": ""})
-def is_td(): return dt.datetime.now(dt.timezone.utc).weekday() <= 3   # Mon-Thu, UTC

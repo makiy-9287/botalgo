@@ -34,3 +34,11 @@ input:focus,select:focus{outline:none;border-color:var(--ac)}
 @media(max-width:760px){.g1{order:1;width:100%}.g3{order:2;width:100%;margin-left:0;overflow-x:auto}.g2{order:3;width:100%}.g1 .feed{margin-left:auto}}
 @media(max-width:520px){input,select{font-size:16px}button,select{font-size:13px;padding:6px 9px}#bwl span{display:none}#sym{width:110px}.feed em{display:none}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+#card{max-width:min(440px,calc(100% - 20px));cursor:pointer}#card .sg{margin-bottom:2px}
+#card .mon{margin-top:6px;border-top:1px solid var(--ln);padding-top:6px}#card .mt{font-size:11px;margin-bottom:4px}
+.mr{display:flex;align-items:flex-start;gap:6px;margin:3px 0}.mr b{width:34px;flex:none}.mr b.buy{color:var(--up)}.mr b.sell{color:var(--dn)}.mr .sc{width:28px;flex:none;color:var(--mu);font-variant-numeric:tabular-nums}
+.ch{display:flex;flex-wrap:wrap;gap:3px}.ch i{font-style:normal;font-size:11px;padding:0 6px;border-radius:6px;border:1px solid var(--ln);color:#5e6673}
+.mr.buy .ch i.ok{color:var(--up);border-color:rgba(14,203,129,.5);background:rgba(14,203,129,.12)}.mr.sell .ch i.ok{color:var(--dn);border-color:rgba(246,70,93,.5);background:rgba(246,70,93,.12)}
+#card .liq{margin-top:4px;font-size:11px;color:var(--mu)}#card.min .mon{display:none}
+.sugg{position:fixed;z-index:40;background:var(--pn);border:1px solid var(--ln);border-radius:10px;overflow:hidden;display:none;box-shadow:0 8px 24px rgba(0,0,0,.5)}.sugg.show{display:block}
+.sugg div{padding:8px 12px;cursor:pointer;font-weight:600}.sugg div em{font-style:normal;color:var(--mu);font-weight:400;font-size:11px;margin-left:2px}.sugg div.a,.sugg div:hover{background:#1e2329}
